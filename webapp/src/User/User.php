@@ -6,14 +6,19 @@ namespace App\User;
 
 use DateTimeInterface;
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping\{ Column, Entity, GeneratedValue, Id };
 use JsonSerializable;
 use LogicException;
 
+#[Entity]
 class User implements JsonSerializable
 {
     public function __construct(
+        #[Column(name: 'name', type: 'string')]
         public string $name,
+        #[Id, Column(name: 'id', type: 'integer', generated: 'INSERT'), GeneratedValue]
         public ?int $id = null,
+        #[Column(name: 'created_at', type: 'datetime_immutable')]
         public DateTimeImmutable $createdAt = new DateTimeImmutable(),
     ) {
     }
