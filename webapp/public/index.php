@@ -7,6 +7,7 @@ use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
+use Illuminate\Database\Capsule\Manager as DatabaseManager;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 
@@ -25,6 +26,12 @@ $dependencies($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
+
+// Set up database
+$databaseManager = new DatabaseManager();
+$databaseManager->addConnection($container->get(SettingsInterface::class)->get('database'));
+$databaseManager->setAsGlobal();
+$databaseManager->bootEloquent();
 
 // Instantiate the app
 AppFactory::setContainer($container);
