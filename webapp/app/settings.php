@@ -19,6 +19,13 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => 'php://stdout',
                     'level' => Logger::DEBUG,
                 ],
+                'database' => [
+                    'host' => getenv('MYSQL_HOST'),
+                    'port' => getenv('MYSQL_PORT'),
+                    'database' => getenv('MYSQL_DATABASE'),
+                    'username' => getenv('MYSQL_USER'),
+                    'password' => getenv('MYSQL_PASSWORD'),
+                ],
             ]);
         },
     ]);
