@@ -6,8 +6,11 @@ namespace App\User;
 
 use DateTimeInterface;
 use DateTimeImmutable;
+use Exception;
 use JsonSerializable;
 use LogicException;
+use TypeError;
+use UnexpectedValueException;
 
 class User implements JsonSerializable
 {
@@ -16,6 +19,29 @@ class User implements JsonSerializable
         public ?int $id = null,
         public DateTimeImmutable $createdAt = new DateTimeImmutable(),
     ) {
+    }
+
+    public static function fromRow(array $row): User
+    {
+        if (!isset($row['id'], $row['name'], $row['created_at'])) {
+            throw new UnexpectedValueException();
+        }
+
+        try {
+            $createdAt = new DateTimeImmutable($row['created_at']);
+        } catch (Exception) {
+            throw new UnexpectedValueException();
+        }
+
+        try {
+            return new User(
+                id: $row['id'],
+                name: $row['name'],
+                createdAt: $createdAt,
+            );
+        } catch (TypeError) {
+            throw new UnexpectedValueException();
+        }
     }
 
     /**
