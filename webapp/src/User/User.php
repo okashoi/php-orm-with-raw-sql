@@ -6,17 +6,24 @@ namespace App\User;
 
 use DateTimeInterface;
 use DateTimeImmutable;
+use Illuminate\Database\Eloquent\Model;
 use JsonSerializable;
 use LogicException;
 
-class User implements JsonSerializable
+/**
+ * @property int $id
+ * @property string $name
+ * @property DateTimeImmutable $created_at
+ * @method static list<User> hydrate(array $items)
+ */
+class User extends Model implements JsonSerializable
 {
-    public function __construct(
-        public string $name,
-        public ?int $id = null,
-        public DateTimeImmutable $createdAt = new DateTimeImmutable(),
-    ) {
-    }
+    protected $primaryKey = 'id';
+    protected $fillable = ['name'];
+    protected $casts = [
+        'created_at' => 'immutable_datetime',
+    ];
+    public $timestamps = false;
 
     /**
      * @return array<string, mixed>
@@ -30,7 +37,7 @@ class User implements JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'createdAt' => $this->createdAt->format(DateTimeInterface::RFC3339),
+            'createdAt' => $this->created_at->format(DateTimeInterface::RFC3339),
         ];
     }
 }
